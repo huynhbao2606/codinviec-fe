@@ -1,92 +1,90 @@
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Oswald:wght@200..700&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Oswald:wght@200..700&display=swap");
 
 @import "tailwindcss";
 
 @import "flowbite";
 
-
-
 @theme {
+  /*→ Dùng cho: logo, button chính, highlight, icon chính*/
+  --color-primary: #5a3fa6; /* Base tím trung bình */
+  --color-primary-50: #f1ecfa; /* Nền rất nhạt (background hoặc badge sáng) */
+  --color-primary-100: #e0d5f4; /* Nền sáng hơn cho chip, badge */
+  --color-primary-200: #c4aef0; /* Nút nhỏ / hover text nhẹ */
+  --color-primary-300: #a17be3; /* Icon highlight, border sáng */
+  --color-primary-400: #845ed2; /* Hover chính cho button hoặc link */
+  --color-primary-500: #6b46c1; /* Màu brand chính (logo, nút chính) */
+  --color-primary-600: #59399f; /* Màu khi hover nút chính */
+  --color-primary-700: #493080; /* Màu khi active hoặc nền menu */
+  --color-primary-800: #392665; /* Nền tối nhẹ cho card, section */
+  --color-primary-900: #2a1d4b; /* Nền rất tối (footer, header dark) */
 
+  /*→ Dùng cho: text phụ, border, link phụ, nền dropdown*/
+  --color-secondary: #4b5fbf; /* Base xanh lạnh (phụ trợ thương hiệu) */
+  --color-secondary-50: #edf0fd; /* Background sáng, highlight nhạt */
+  --color-secondary-100: #d8dcfa; /* Nền phụ của card / input */
+  --color-secondary-200: #b2b8f4; /* Viền sáng, hover sáng nhẹ */
+  --color-secondary-300: #8d94ee; /* Text phụ hover, border tinh tế */
+  --color-secondary-400: #6770e7; /* Icon phụ hoặc link secondary */
+  --color-secondary-500: #4b5fbf; /* Dùng cho heading phụ */
+  --color-secondary-600: #3f53a8; /* Nút phụ hoặc text dark */
+  --color-secondary-700: #34458c; /* Nền dropdown hoặc menu con */
+  --color-secondary-800: #28376f; /* Background tối cho hover nav */
+  --color-secondary-900: #1d2955; /* Background header / footer phụ */
 
-    /*→ Dùng cho: logo, button chính, highlight, icon chính*/
-    --color-primary: #5a3fa6; /* Base tím trung bình */
-    --color-primary-50: #f1ecfa;  /* Nền rất nhạt (background hoặc badge sáng) */
-    --color-primary-100: #e0d5f4; /* Nền sáng hơn cho chip, badge */
-    --color-primary-200: #c4aef0; /* Nút nhỏ / hover text nhẹ */
-    --color-primary-300: #a17be3; /* Icon highlight, border sáng */
-    --color-primary-400: #845ed2; /* Hover chính cho button hoặc link */
-    --color-primary-500: #6b46c1; /* Màu brand chính (logo, nút chính) */
-    --color-primary-600: #59399f; /* Màu khi hover nút chính */
-    --color-primary-700: #493080; /* Màu khi active hoặc nền menu */
-    --color-primary-800: #392665; /* Nền tối nhẹ cho card, section */
-    --color-primary-900: #2a1d4b; /* Nền rất tối (footer, header dark) */
+  /*→ Dùng cho: hover, CTA highlight, trạng thái (success/info)*/
+  --color-accent: #4db6ac; /* Base accent – dùng cho hover chính */
+  --color-accent-50: #e0f7f5; /* Background nhẹ / card nổi */
+  --color-accent-100: #b3ebe6; /* Viền, text nhỏ */
+  --color-accent-200: #80ded7; /* Nút hover sáng hoặc icon accent */
+  --color-accent-300: #4db6ac; /* Màu accent mặc định cho CTA */
+  --color-accent-400: #26a69a; /* Hover accent cho CTA */
+  --color-accent-500: #009688; /* Accent chính (link, nút phụ nổi bật) */
+  --color-accent-600: #00897b; /* Hover đậm hơn */
+  --color-accent-700: #00796b; /* Active / background accent */
+  --color-accent-800: #00695c; /* Nền tối accent */
+  --color-accent-900: #004d40; /* Border accent hoặc footer tone */
 
-
-
-    /*→ Dùng cho: text phụ, border, link phụ, nền dropdown*/
-    --color-secondary: #4b5fbf; /* Base xanh lạnh (phụ trợ thương hiệu) */
-    --color-secondary-50: #edf0fd; /* Background sáng, highlight nhạt */
-    --color-secondary-100: #d8dcfa; /* Nền phụ của card / input */
-    --color-secondary-200: #b2b8f4; /* Viền sáng, hover sáng nhẹ */
-    --color-secondary-300: #8d94ee; /* Text phụ hover, border tinh tế */
-    --color-secondary-400: #6770e7; /* Icon phụ hoặc link secondary */
-    --color-secondary-500: #4b5fbf; /* Dùng cho heading phụ */
-    --color-secondary-600: #3f53a8; /* Nút phụ hoặc text dark */
-    --color-secondary-700: #34458c; /* Nền dropdown hoặc menu con */
-    --color-secondary-800: #28376f; /* Background tối cho hover nav */
-    --color-secondary-900: #1d2955; /* Background header / footer phụ */
-
-
-
-    /*→ Dùng cho: hover, CTA highlight, trạng thái (success/info)*/
-    --color-accent: #4db6ac; /* Base accent – dùng cho hover chính */
-    --color-accent-50: #e0f7f5;  /* Background nhẹ / card nổi */
-    --color-accent-100: #b3ebe6; /* Viền, text nhỏ */
-    --color-accent-200: #80ded7; /* Nút hover sáng hoặc icon accent */
-    --color-accent-300: #4db6ac; /* Màu accent mặc định cho CTA */
-    --color-accent-400: #26a69a; /* Hover accent cho CTA */
-    --color-accent-500: #009688; /* Accent chính (link, nút phụ nổi bật) */
-    --color-accent-600: #00897b; /* Hover đậm hơn */
-    --color-accent-700: #00796b; /* Active / background accent */
-    --color-accent-800: #00695c; /* Nền tối accent */
-    --color-accent-900: #004d40; /* Border accent hoặc footer tone */
+  --text-default: #1e1e1e;
+  --text-link: #0e2eed;
 }
-
 
 @layer base {
-    html {
-        scroll-behavior: smooth;
-    }
+  html {
+    scroll-behavior: smooth;
+  }
 
-    body {
-        font-family: "Lexend", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        font-weight: 400;
-        font-size: 1rem;
-        line-height: 1.6;
-        background-color: var(--color-primary-50);
-        color: #1e1e1e;
-        @apply antialiased text-gray-800;
-    }
+  body {
+    font-family: "Lexend", system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-weight: 400;
+    font-size: 1rem;
+    line-height: 1.6;
+    background-color: var(--color-primary-50);
+    color: var(--text-default);
+    @apply antialiased text-gray-800;
+  }
 
-    header {
-        @apply py-0.5 text-lg;
-    }
+  header {
+    @apply py-0.5 text-lg;
+  }
 
-    header .logo {
-        @apply text-accent font-extrabold text-2xl tracking-wide;
-    }
+  header .logo {
+    @apply text-accent font-extrabold text-2xl tracking-wide;
+  }
 
-    header nav ul li {
-        @apply text-lg font-semibold text-accent-100 hover:text-accent transition-all;
-    }
-
+  header nav ul li {
+    @apply text-lg font-semibold text-accent-100 hover:text-accent transition-all;
+  }
 }
 
-
 @layer utilities {
-    .bg-brand-gradient {
-        background: linear-gradient(to right, var(--color-primary-900), var(--color-primary-900), var(--color-primary-900), var(--color-primary-600));
-    }
+  .bg-brand-gradient {
+    background: linear-gradient(
+      to right,
+      var(--color-primary-900),
+      var(--color-primary-900),
+      var(--color-primary-900),
+      var(--color-primary-600)
+    );
+  }
 }

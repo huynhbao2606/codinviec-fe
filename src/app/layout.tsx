@@ -5,13 +5,17 @@ import React from "react";
 import Header from "@/components/home/layout/Header";
 import Footer from "@/components/home/layout/Footer";
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="vi">
       <body className="flex flex-col min-h-screen">
         <ReduxProvider>
-          <Header/>
-            <main className="flex-grow">{children}</main>
+          <Header />
+          <main className="flex-grow flex">{children}</main>
           <Footer />
           <FlowbiteInit />
         </ReduxProvider>
