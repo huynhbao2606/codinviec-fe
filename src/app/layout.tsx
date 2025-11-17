@@ -23,7 +23,7 @@ export default function RootLayout({
             }}
           >
             <Header />
-            <main className="flex-grow flex">{children}</main>
+            <main className="flex-grow">{children}</main>
             <Footer />
             <DatePicker />
           </ConfigProvider>
