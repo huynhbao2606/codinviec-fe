@@ -4,7 +4,7 @@ const config: Config = {
   darkMode: false,
   content: [
     "./src/app/**/*.{js,ts,jsx,tsx}",
-    "./src/components/**/*.{js,ts,jsx,tsx}", // kiểm tra lại nếu components nằm ngoài app
+    "./src/components/**/*.{js,ts,jsx,tsx}",
     "./src/app/pages/**/*.{js,ts,jsx,tsx}",
   ],
   plugins: [],

@@ -87,4 +87,7 @@
       var(--color-primary-600)
     );
   }
+  .link-underline {
+    @apply relative after:content-[''] after:block after:w-full after:h-[2px] after:bg-accent-500 after:mt-[1px];
+  }
 }
