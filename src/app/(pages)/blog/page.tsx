@@ -1,6 +1,6 @@
 import ContainerPage from "@/components/ui/container/page";
 import HeadingCustom from "@/components/ui/HeadingCustom/page";
-import PATH from "@/constant/path";
+import { PATHS } from "@/constants/paths";
 import { HomeOutlined } from "@ant-design/icons";
 import { Breadcrumb } from "antd";
 import Link from "next/link";
@@ -18,7 +18,7 @@ const BlogPage = () => {
           items={[
             {
               title: (
-                <Link href={PATH.HOME}>
+                <Link href={PATHS.HOME}>
                   <HomeOutlined />
                 </Link>
               ),
@@ -37,7 +37,7 @@ const BlogPage = () => {
           <div className=" flex items-center justify-between">
             <h2 className="text-[30px]">Nổi bật</h2>
             <Link
-              href={PATH.BLOGALL}
+              href={PATHS.BLOG_ALL}
               className="text-accent-500 link-underline"
             >
               Xem tất cả
@@ -55,7 +55,7 @@ const BlogPage = () => {
           <div className=" flex items-center justify-between">
             <h2 className="text-[30px]">Mới nhất</h2>
             <Link
-              href={PATH.BLOGALL}
+              href={PATHS.BLOG_ALL}
               className="text-accent-500 link-underline"
             >
               Xem tất cả
@@ -73,7 +73,7 @@ const BlogPage = () => {
           <div className=" flex items-center justify-between">
             <h2 className="text-[30px]">Đọc nhiều nhất</h2>
             <Link
-              href={PATH.BLOGALL}
+              href={PATHS.BLOG_ALL}
               className="text-accent-500 link-underline"
             >
               Xem tất cả

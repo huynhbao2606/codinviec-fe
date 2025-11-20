@@ -1,7 +1,7 @@
 import { Pagination, PaginationProps } from "antd";
 import clsx from "clsx";
 
-interface MyPaginationProps extends PaginationProps {}
+type MyPaginationProps = PaginationProps
 const MyPagination = ({
   className = "",
   defaultCurrent = 1,

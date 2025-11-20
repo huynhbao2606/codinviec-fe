@@ -3,7 +3,7 @@ import { Form, FormProps, Input } from "antd";
 import { UiButton } from "../base/UiButton";
 import clsx from "clsx";
 
-interface SearchCustomProps extends FormProps {}
+type SearchCustomProps = FormProps
 type FieldType = {
   search?: string;
 };

@@ -41,13 +41,13 @@
   --color-accent-700: #00796b; /* Active / background accent */
   --color-accent-800: #00695c; /* Nền tối accent */
   --color-accent-900: #004d40; /* Border accent hoặc footer tone */
+
+  /* Text colors - sử dụng gray scale cho text */
+  --color-gray-900: #1e1e1e; /* text-default */
+  --color-blue-600: #0e2eed; /* text-link */
 }
 
 @layer base {
-  :root {
-    --text-default: #1e1e1e;
-    --text-link: #0e2eed;
-  }
   html {
     scroll-behavior: smooth;
     color-scheme: light !important;
@@ -59,9 +59,7 @@
     font-weight: 400;
     font-size: 1rem;
     line-height: 1.6;
-    background-color: var(--color-primary-50);
-    color: var(--text-default);
-    @apply antialiased text-gray-800;
+    @apply antialiased bg-primary-50 text-gray-900;
   }
 
   header {
@@ -79,13 +77,7 @@
 
 @layer utilities {
   .bg-brand-gradient {
-    background: linear-gradient(
-      to right,
-      var(--color-primary-900),
-      var(--color-primary-900),
-      var(--color-primary-900),
-      var(--color-primary-600)
-    );
+    @apply bg-gradient-to-r from-primary-900 via-primary-900 to-primary-600;
   }
   .link-underline {
     @apply relative after:content-[''] after:block after:w-full after:h-[2px] after:bg-accent-500 after:mt-[1px];

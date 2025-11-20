@@ -1,6 +1,6 @@
 import ContainerPage from "@/components/ui/container/page";
 import HeadingCustom from "@/components/ui/HeadingCustom/page";
-import PATH from "@/constant/path";
+import { PATHS } from "@/constants/paths";
 import { HomeOutlined } from "@ant-design/icons";
 import { Breadcrumb } from "antd";
 import Link from "next/link";
@@ -18,13 +18,13 @@ const BlogAllPage = () => {
           items={[
             {
               title: (
-                <Link href={PATH.HOME}>
+                <Link href={PATHS.HOME}>
                   <HomeOutlined />
                 </Link>
               ),
             },
             {
-              title: <Link href={PATH.BLOG}>Blog</Link>,
+              title: <Link href={PATHS.BLOG}>Blog</Link>,
             },
             {
               title: "Blog-all",

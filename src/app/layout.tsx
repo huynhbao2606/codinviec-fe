@@ -1,6 +1,6 @@
 import ReduxProvider from "@/app/providers/ReduxProvider";
-import Footer from "@/components/home/layout/Footer";
-import Header from "@/components/home/layout/Header";
+import Footer from "@/components/home/Footer";
+import Header from "@/components/home/Header";
 import React from "react";
 import "./globals.css";
 import { ConfigProvider, DatePicker } from "antd";

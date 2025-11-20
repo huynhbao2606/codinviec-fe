@@ -2,6 +2,7 @@ import HeadingCustom from "@/components/ui/HeadingCustom/page";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";
+import React from "react";
 
 type divProps = React.HTMLAttributes<HTMLDivElement>;
 
@@ -12,14 +13,9 @@ type BlogCardProps = {
   linkDetail?: string;
 } & divProps;
 
-const BlogCardCustom = ({
-  title = "",
-  shortDescription = "",
-  imageUrl = "",
-  linkDetail = "",
-  className,
-  ...rest
-}: BlogCardProps) => {
+const BlogCardCustom =
+    ({title = "", shortDescription = "", imageUrl = "", linkDetail = "", className, ...rest}:
+     BlogCardProps) => {
   return (
     <div
       className={clsx(

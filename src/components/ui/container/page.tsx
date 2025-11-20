@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import React from "react";
 
-interface ContainerProps extends React.HTMLAttributes<HTMLDivElement> {}
+type ContainerProps = React.HTMLAttributes<HTMLDivElement>
 
 const ContainerPage = ({ children, className = "" }: ContainerProps) => {
   return (

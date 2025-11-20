@@ -7,6 +7,7 @@ import { RootState } from "@/store";
 import { fetchCategories } from "@/store/slice/home/categorySlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
+import { Loading } from "@/components/ui/Loading/index";
 
 export default function ListCategory() {
   const dispatch = useAppDispatch();
@@ -18,7 +19,13 @@ export default function ListCategory() {
     dispatch(fetchCategories());
   }, [dispatch]);
 
-  if (loading) return <li className="text-accent-100 px-3">...</li>;
+  if (loading) {
+    return (
+      <li className="flex items-center px-3">
+        <Loading size="sm" variant="accent" />
+      </li>
+    );
+  }
   if (error) return <li className="text-red-400 px-3">Lỗi: {error}</li>;
   if (!Array.isArray(data) || data.length === 0) return null;
 
