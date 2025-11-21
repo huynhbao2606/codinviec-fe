@@ -1,57 +1,96 @@
 "use client";
+
 import axios, { AxiosError } from "axios";
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-  headers: { "Content-Type": "application/json" },
-  withCredentials: true,
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+    headers: { "Content-Type": "application/json" },
+    withCredentials: true,
 });
 
-// Request interceptor: Add token to headers
+// Tự động thêm token vào header
 api.interceptors.request.use(
-  (config) => {
-    const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
+    (config) => {
+        const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
 );
 
-// Response interceptor: Handle token refresh and errors
+
+// Retry request với token mới
+const retryWithNewToken = async (originalRequest: any, newToken: string) => {
+    // Lưu token mới
+    if (typeof window !== "undefined") {
+        localStorage.setItem("access_token", newToken);
+    }
+
+    // Đánh dấu đã retry
+    originalRequest.__isRetryRequest = true;
+
+    // Set token mới vào request
+    if (!originalRequest.headers) {
+        originalRequest.headers = {};
+    }
+    originalRequest.headers.Authorization = `Bearer ${newToken}`;
+
+    // Retry request
+    return api(originalRequest);
+};
+
+// ==================== RESPONSE INTERCEPTOR ====================
 api.interceptors.response.use(
-  (res) => {
-    // Check if backend returned a new access token (from auto refresh in filter)
-    // Backend filter automatically refreshes and returns new token in header
-    const newAccessToken = res.headers["x-new-access-token"] || res.headers["X-New-Access-Token"];
-    if (newAccessToken && typeof window !== "undefined") {
-      localStorage.setItem("access_token", newAccessToken);
-      // Trigger storage event to sync auth state
-      window.dispatchEvent(new Event("storage"));
-    }
-    return res;
-  },
-  async (error: AxiosError) => {
-    if (!error.response) {
-      // Network error - return error to be handled by caller
-      return Promise.reject(new Error("Không thể kết nối đến máy chủ. Vui lòng kiểm tra lại kết nối mạng."));
-    }
+    // Success: Lưu token mới nếu có
+    (res) => {
+        const newToken = res.headers["x-new-access-token"];
+        if (newToken && typeof window !== "undefined") {
+            localStorage.setItem("access_token", newToken);
+        }
+        return res;
+    },
+    // Error: Xử lý 401 và retry
+    async (error: AxiosError) => {
+        const status = error.response?.status;
+        const originalRequest: any = error.config;
 
-    const { status } = error.response;
+        // Chỉ xử lý 401 và chưa retry
+        if (status !== 401 || !originalRequest || originalRequest.__isRetryRequest) {
+            // Nếu là 401 và không retry được → logout
+            if (status === 401 && typeof window !== "undefined") {
+                localStorage.removeItem("access_token");
+                const errorMessage = (error.response?.data as any)?.message || "Phiên đăng nhập của bạn đã hết hạn. Vui lòng đăng nhập lại!";
+                window.dispatchEvent(new CustomEvent("logout", { detail: { message: errorMessage } }));
+            }
+            return Promise.reject(error);
+        }
 
-    // Handle 401 - Backend filter couldn't refresh (refresh token expired or not found)
-    // Note: If backend filter refreshes successfully, request continues and returns 200 (not 401)
-    // Frontend will receive X-New-Access-Token in successful response (200)
-    if (status === 401 && typeof window !== "undefined") {
-      localStorage.removeItem("access_token");
-      // Redirect to signin page
-      window.location.href = "/signin";
+        // Tìm token mới
+        // 1 error response header
+        const newTokenFromHeader = error.response?.headers["x-new-access-token"];
+
+        // 2 localStorage
+        const currentToken = originalRequest.headers?.Authorization?.replace("Bearer ", "") || null;
+        const latestToken = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;
+        const newTokenFromStorage = latestToken && latestToken !== currentToken ? latestToken : null;
+
+        // Retry với token mới
+        const newToken = newTokenFromHeader || newTokenFromStorage;
+        if (newToken) {
+            return retryWithNewToken(originalRequest, newToken);
+        }
+
+        // Không có token mới → logout
+        if (typeof window !== "undefined") {
+            localStorage.removeItem("access_token");
+            const errorMessage = (error.response?.data as any)?.message || "Phiên đăng nhập của bạn đã hết hạn. Vui lòng đăng nhập lại!";
+            window.dispatchEvent(new CustomEvent("logout", { detail: { message: errorMessage } }));
+        }
+
+        return Promise.reject(error);
     }
-
-    // Return error to be handled by caller (component, slice, etc.)
-    return Promise.reject(error);
-  }
 );
 
 export default api;

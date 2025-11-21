@@ -4,6 +4,9 @@ import Header from "@/components/home/Header";
 import React from "react";
 import "./globals.css";
 import { ConfigProvider, DatePicker } from "antd";
+import GlobalHandler from "@/components/ui/Handler/GlobalHandler";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export default function RootLayout({
   children,
@@ -26,6 +29,19 @@ export default function RootLayout({
             <main className="flex-grow">{children}</main>
             <Footer />
             <DatePicker />
+            <GlobalHandler />
+            <ToastContainer
+              position="top-right"
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+            />
           </ConfigProvider>
         </ReduxProvider>
       </body>
