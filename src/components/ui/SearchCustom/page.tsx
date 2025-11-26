@@ -9,15 +9,11 @@ type FieldType = {
 };
 
 const SearchCustom = ({ className, ...props }: SearchCustomProps) => {
-  const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-    console.log("Success:", values);
-  };
+  const onFinish: FormProps<FieldType>["onFinish"] = (values) => { };
 
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
     errorInfo
-  ) => {
-    console.log("Failed:", errorInfo);
-  };
+  ) => { };
   return (
     <Form
       name="basic"

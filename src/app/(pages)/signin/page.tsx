@@ -2,19 +2,17 @@
 import { UiButton } from "@/components/ui/base/UiButton";
 import ContainerPage from "@/components/ui/container/page";
 import { PATHS } from "@/constants/paths";
-import { LoginRequest } from "@/types/auth/LoginRequest";
-import { Form, FormProps, Input } from "antd";
+import { ILogin } from "@/types/auth/Login";
+import { Form, FormProps, Input, Spin } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
-import Swal from "sweetalert2";
+import { useEffect, useState } from "react";
 import { login } from "@/store/slice/auth/authSlice";
 import { useAppDispatch, useAppSelector } from "@/hooks/hooks";
 import { RootState } from "@/store";
-import { getGoogleErrorMessage } from "@/utils/errorHandler";
-import { useAuthSync } from "@/hooks/auth/useAuthSync";
-import {Loading} from "@/components/ui/Loading/Loading";
+import { AxiosError } from "axios";
+import { alert, toast } from "@/utils/notification";
 
 type FieldType = {
   email?: string;
@@ -26,9 +24,7 @@ const SigninPage = () => {
   const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
   const { isAuthenticated, loading } = useAppSelector((state: RootState) => state.auth);
-
-  // Sync auth state
-  useAuthSync();
+  const [submitting, setSubmitting] = useState(false);
 
   // Redirect nếu đã đăng nhập
   useEffect(() => {
@@ -42,14 +38,24 @@ const SigninPage = () => {
     const error = searchParams.get("error");
     if (error) {
       // Map error code thành error message
-      const errorMessage = getGoogleErrorMessage(error);
+      const errorMessages: Record<string, string> = {
+        access_denied: "Bạn đã từ chối quyền truy cập. Vui lòng thử lại.",
+        invalid_request: "Yêu cầu không hợp lệ. Vui lòng thử lại.",
+        unauthorized_client: "Ứng dụng không được phép truy cập. Vui lòng liên hệ quản trị viên.",
+        disabled_client: "Ứng dụng OAuth đã bị vô hiệu hóa. Vui lòng liên hệ quản trị viên để kích hoạt lại.",
+        unsupported_response_type: "Loại phản hồi không được hỗ trợ. Vui lòng thử lại.",
+        invalid_scope: "Phạm vi truy cập không hợp lệ. Vui lòng thử lại.",
+        server_error: "Lỗi máy chủ. Vui lòng thử lại sau.",
+        temporarily_unavailable: "Dịch vụ tạm thời không khả dụng. Vui lòng thử lại sau.",
+        no_email: "Không tìm thấy email từ tài khoản Google. Vui lòng thử lại.",
+        no_token: "Không thể tạo token. Vui lòng thử lại.",
+        logged_in: "Tài khoản này đã được đăng nhập ở nơi khác!",
+        email_err: "Lỗi xử lý email. Vui lòng thử lại.",
+        token_err: "Lỗi xử lý token. Vui lòng thử lại.",
+      };
+      const errorMessage = errorMessages[error] || "Đăng nhập thất bại. Vui lòng thử lại.";
 
-      Swal.fire({
-        icon: "error",
-        title: "Đăng nhập thất bại",
-        text: errorMessage,
-        confirmButtonColor: "#6b46c1",
-      });
+      alert.error("Đăng nhập thất bại", errorMessage);
 
       // Xóa error parameter từ URL
       router.replace(PATHS.SIGNIN);
@@ -60,61 +66,51 @@ const SigninPage = () => {
     // Redirect đến backend OAuth2 endpoint
     const apiBaseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
     if (!apiBaseUrl) {
-      Swal.fire({
-        icon: "error",
-        title: "Lỗi cấu hình",
-        text: "Không tìm thấy cấu hình API. Vui lòng liên hệ quản trị viên.",
-        confirmButtonColor: "#6b46c1",
-      });
+      alert.error("Lỗi cấu hình", "Không tìm thấy cấu hình API. Vui lòng liên hệ quản trị viên.");
       return;
     }
     window.location.href = `${apiBaseUrl}/auth/login-google`;
   };
 
   const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
-    const loginRequest: LoginRequest = {
+    const loginData: ILogin = {
       email: values.email!,
       password: values.password!,
     };
 
+    setSubmitting(true);
     try {
       // Dispatch login action - Service được gọi trong slice
-      // checkAuth được gọi tự động trong login thunk
-      await dispatch(login(loginRequest)).unwrap();
+      // checkAuth được gọi tự động trong login 
+      await dispatch(login(loginData)).unwrap();
 
-      Swal.fire({
-        icon: "success",
-        title: "Đăng nhập thành công!",
-        text: "Chào mừng bạn đến với FindJob",
-        confirmButtonColor: "#6b46c1",
-        timer: 2000,
-        showConfirmButton: false,
-      }).then(() => {
-        router.push(PATHS.HOME);
-      });
+      toast.success("Đăng nhập thành công!", "Chào mừng bạn đến với CodinViec");
+      router.push(PATHS.HOME);
     } catch (error: unknown) {
-      // Error message từ slice (đã được xử lý và trả về string)
-      const errorMessage = typeof error === "string" ? error : "Đăng nhập thất bại. Vui lòng thử lại.";
-      await Swal.fire({
-        icon: "error",
-        title: "Đăng nhập thất bại",
-        text: errorMessage,
-        confirmButtonColor: "#6b46c1",
-      });
+      // Error từ slice là AxiosError
+      let errorMessage = "Đăng nhập thất bại. Vui lòng thử lại.";
+      if (error instanceof AxiosError) {
+        errorMessage = (error.response?.data as any)?.message || error.message || errorMessage;
+      } else if (error instanceof Error) {
+        errorMessage = error.message;
+      } else if (typeof error === "string") {
+        errorMessage = error;
+      }
+      toast.error("Đăng nhập thất bại", errorMessage);
+    } finally {
+      setSubmitting(false);
     }
   };
 
   const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
     errorInfo
-  ) => {
-    console.log("Failed:", errorInfo);
-  };
+  ) => { };
 
   // Hiển thị loading khi đang check auth
   if (loading) {
     return (
       <ContainerPage className="flex justify-center items-center min-h-screen">
-        <Loading size="lg" variant="primary" />
+        <Spin size="large" />
       </ContainerPage>
     );
   }
@@ -130,12 +126,13 @@ const SigninPage = () => {
         <div className="flex gap-[20px] w-full">
           <div className="signin_left basis-1/2 flex-shrink-0 max-md:basis-full">
             <h1 className="mb-[20px] text-[28px] text-accent-300 font-semibold max-md:text-center">
-              Chào mừng đến với FindJob
+              Chào mừng đến với CodinViec
             </h1>
             <UiButton
               variantCustom="outlineGoogle"
               className="!mb-[20px] !w-full"
               onClick={handleGoogleLogin}
+              disabled={submitting}
             >
               <Image
                 src="/google-icon.svg"
@@ -170,7 +167,7 @@ const SigninPage = () => {
                 ]}
                 style={{ marginBottom: "10px" }}
               >
-                <Input size="large" placeholder="findjob@gmail.com" />
+                <Input size="large" placeholder="codinviec@gmail.com" />
               </Form.Item>
 
               <Form.Item<FieldType>
@@ -189,7 +186,7 @@ const SigninPage = () => {
               </Form.Item>
 
               <Form.Item label={null} style={{ marginTop: "20px" }}>
-                <UiButton className="w-full" htmlType="submit">
+                <UiButton className="w-full" htmlType="submit" loading={submitting} disabled={submitting}>
                   Đăng nhập với email
                 </UiButton>
 

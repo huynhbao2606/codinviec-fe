@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import {Category} from "@/types/home/Category";
-import {categoryService} from "@/services/home/categoryService";
+import { AxiosError } from "axios";
+import { Category } from "@/types/home/Category";
+import { categoryService } from "@/services/home/categoryService";
 
 interface CategoryState {
     data: Category[];
     loading: boolean;
-    error: string | null;
+    error: AxiosError | null;
 }
 
 const initialState: CategoryState = {
@@ -17,8 +18,14 @@ const initialState: CategoryState = {
 // Fetch categories qua service
 export const fetchCategories = createAsyncThunk(
     "categories/fetchAll",
-    async () => {
-        return await categoryService.getAll();
+    async (_, { rejectWithValue }) => {
+        try {
+            return await categoryService.getAll();
+        } catch (error: unknown) {
+            // Trả về error object để component có thể xử lý chi tiết
+            const axiosError = error as AxiosError;
+            return rejectWithValue(axiosError);
+        }
     }
 );
 
@@ -37,9 +44,9 @@ const categorySlice = createSlice({
             })
             .addCase(fetchCategories.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.error.message || "Error fetching categories";
+                state.error = (action.payload as AxiosError) || (action.error as AxiosError);
             });
     },
 });
 
-export const categoryReducer  = categorySlice.reducer;
+export const categoryReducer = categorySlice.reducer;

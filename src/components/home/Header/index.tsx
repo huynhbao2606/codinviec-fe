@@ -1,16 +1,15 @@
 "use client";
 
-import { PATHS } from "@/constants/paths";
-import ListCategory from "@/components/home/Category/ListCategory";
 import Link from "next/link";
 import Image from "next/image";
-import { RootState } from "@/store";
+import { PATHS } from "@/constants/paths";
+import ListCategory from "@/components/home/Category/ListCategory";
 import { useAppSelector } from "@/hooks/hooks";
-import { useAuthSync } from "@/hooks/auth/useAuthSync";
+import { RootState } from "@/store";
 import { useLogout } from "@/hooks/auth/useLogout";
-import {Loading} from "@/components/ui/Loading/Loading";
+import { IUser } from "@/types/auth/User";
 
-const getUserDisplayName = (user: { firstName?: string; lastName?: string; email?: string } | null): string => {
+const getUserDisplayName = (user: IUser | null): string => {
   if (!user) return "User";
   if (user.firstName && user.lastName) {
     return `${user.firstName} ${user.lastName}`;
@@ -22,11 +21,7 @@ const getUserDisplayName = (user: { firstName?: string; lastName?: string; email
 
 export default function Header() {
   const { isAuthenticated, user, loading } = useAppSelector((state: RootState) => state.auth);
-
-  // Use custom hooks
-  useAuthSync();
   const { handleLogout } = useLogout();
-
 
   const displayName = getUserDisplayName(user);
 
@@ -38,7 +33,7 @@ export default function Header() {
             href={PATHS.HOME}
             className="text-accent font-extrabold text-2xl hover:text-accent-200 transition"
           >
-            FindJob
+            CodinViec
           </Link>
 
           <ul className="hidden md:flex items-center space-x-6 text-base font-semibold text-accent-100">
@@ -47,10 +42,7 @@ export default function Header() {
         </div>
 
         <div className="hidden md:flex items-center space-x-4 text-accent-100 font-medium">
-          {loading ? (
-            // Loading state
-            <Loading size="sm" variant="accent" />
-          ) : isAuthenticated && user ? (
+          {!loading && isAuthenticated && user ? (
             // User đã đăng nhập - Hiển thị avatar và dropdown với hover
             <div className="relative group">
               <button className="flex items-center space-x-3 hover:opacity-90 transition cursor-pointer">

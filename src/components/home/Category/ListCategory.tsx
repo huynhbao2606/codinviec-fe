@@ -7,11 +7,10 @@ import { RootState } from "@/store";
 import { fetchCategories } from "@/store/slice/home/categorySlice";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
-import { Loading } from "@/components/ui/Loading/index";
 
 export default function ListCategory() {
   const dispatch = useAppDispatch();
-  const { data, loading, error } = useAppSelector(
+  const { data, loading } = useAppSelector(
     (state: RootState) => state.category
   );
 
@@ -20,13 +19,8 @@ export default function ListCategory() {
   }, [dispatch]);
 
   if (loading) {
-    return (
-      <li className="flex items-center px-3">
-        <Loading size="sm" variant="accent" />
-      </li>
-    );
+    return null;
   }
-  if (error) return <li className="text-red-400 px-3">Lỗi: {error}</li>;
   if (!Array.isArray(data) || data.length === 0) return null;
 
   return (
