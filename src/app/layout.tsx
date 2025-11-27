@@ -7,6 +7,7 @@ import ToastContainer from "@/components/ui/ToastContainer/ToastContainer";
 import React from "react";
 import "./globals.css";
 import { ConfigProvider } from "antd";
+import MyQueryClientProvider from "./providers/QueryClientProvider";
 
 export default function RootLayout({
   children,
@@ -17,22 +18,24 @@ export default function RootLayout({
     <html lang="vi">
       <body className="flex flex-col min-h-screen">
         <ReduxProvider>
-          <AuthProvider>
-            <ConfigProvider
-              theme={{
-                token: {
-                  fontFamily:
-                    'Lexend, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-                },
-              }}
-            >
-              <Header />
-              <main className="flex-grow">{children}</main>
-              <Footer />
-              <GlobalHandler />
-              <ToastContainer />
-            </ConfigProvider>
-          </AuthProvider>
+          <MyQueryClientProvider>
+            <AuthProvider>
+              <ConfigProvider
+                theme={{
+                  token: {
+                    fontFamily:
+                      'Lexend, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+                  },
+                }}
+              >
+                <Header />
+                <main className="flex-grow">{children}</main>
+                <Footer />
+                <GlobalHandler />
+                <ToastContainer />
+              </ConfigProvider>
+            </AuthProvider>
+          </MyQueryClientProvider>
         </ReduxProvider>
       </body>
     </html>

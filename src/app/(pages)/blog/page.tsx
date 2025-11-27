@@ -1,3 +1,4 @@
+"use client";
 import ContainerPage from "@/components/ui/container/page";
 import HeadingCustom from "@/components/ui/HeadingCustom/page";
 import { PATHS } from "@/constants/paths";
@@ -32,6 +33,7 @@ const BlogPage = () => {
         <p>Blog tìm việc giúp phát triển ý tưởng và sự nghiệp của bạn</p>
 
         <SearchCustom className="!mt-[20px]" />
+
         {/* section Nổi bật */}
         <section className="mt-[30px]">
           <div className=" flex items-center justify-between">
@@ -49,29 +51,10 @@ const BlogPage = () => {
             <BlogCardCustom imageUrl="/hinh_blog_mau.jpg" />
           </ListBlogCustom>
         </section>
-
         {/* section Mới nhất */}
         <section className="mt-[30px]">
           <div className=" flex items-center justify-between">
             <h2 className="text-[30px]">Mới nhất</h2>
-            <Link
-              href={PATHS.BLOG_ALL}
-              className="text-accent-500 link-underline"
-            >
-              Xem tất cả
-            </Link>
-          </div>
-          <ListBlogCustom className="mt-[20px]">
-            <BlogCardCustom imageUrl="/hinh_blog_mau.jpg" />
-            <BlogCardCustom imageUrl="/hinh_blog_mau.jpg" />
-            <BlogCardCustom imageUrl="/hinh_blog_mau.jpg" />
-          </ListBlogCustom>
-        </section>
-
-        {/* section đọc nhiều nhất */}
-        <section className="mt-[30px]">
-          <div className=" flex items-center justify-between">
-            <h2 className="text-[30px]">Đọc nhiều nhất</h2>
             <Link
               href={PATHS.BLOG_ALL}
               className="text-accent-500 link-underline"

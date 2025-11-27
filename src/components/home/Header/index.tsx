@@ -20,7 +20,9 @@ const getUserDisplayName = (user: IUser | null): string => {
 };
 
 export default function Header() {
-  const { isAuthenticated, user, loading } = useAppSelector((state: RootState) => state.auth);
+  const { isAuthenticated, user, loading } = useAppSelector(
+    (state: RootState) => state.auth
+  );
   const { handleLogout } = useLogout();
 
   const displayName = getUserDisplayName(user);
@@ -61,7 +63,6 @@ export default function Header() {
                     </span>
                   )}
                 </div>
-                <span className="text-accent-100 font-medium">{displayName}</span>
                 <svg
                   className="w-4 h-4 text-accent-100 transition-transform group-hover:rotate-180"
                   fill="none"
@@ -80,8 +81,12 @@ export default function Header() {
               {/* Dropdown Menu - Hiển thị khi hover */}
               <div className="absolute right-0 mt-2 w-48 bg-primary-900 rounded-lg shadow-lg border border-primary-700 py-1 z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                 <div className="px-4 py-2 border-b border-primary-700">
-                  <p className="text-sm font-semibold text-accent-100">{displayName}</p>
-                  <p className="text-xs text-accent-300 truncate">{user.email}</p>
+                  <p className="text-sm font-semibold text-accent-100">
+                    {displayName}
+                  </p>
+                  <p className="text-xs text-accent-300 truncate">
+                    {user.email}
+                  </p>
                 </div>
                 <Link
                   href={PATHS.PROFILE}
@@ -101,7 +106,10 @@ export default function Header() {
           ) : (
             // User chưa đăng nhập - Hiển thị nút đăng nhập/đăng ký
             <>
-              <Link href={PATHS.SIGNIN} className="hover:text-accent transition">
+              <Link
+                href={PATHS.SIGNIN}
+                className="hover:text-accent transition"
+              >
                 Đăng nhập
               </Link>
               <Link

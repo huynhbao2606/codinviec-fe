@@ -13,9 +13,14 @@ type BlogCardProps = {
   linkDetail?: string;
 } & divProps;
 
-const BlogCardCustom =
-    ({title = "", shortDescription = "", imageUrl = "", linkDetail = "", className, ...rest}:
-     BlogCardProps) => {
+const BlogCardCustom = ({
+  title = "",
+  shortDescription = "",
+  imageUrl = "/hinh_blog_mau.jpg",
+  linkDetail = "",
+  className,
+  ...rest
+}: BlogCardProps) => {
   return (
     <div
       className={clsx(
@@ -35,17 +40,11 @@ const BlogCardCustom =
       <div className="flex-1 flex flex-col justify-between p-[32px]">
         <div>
           <HeadingCustom type="h5" className="line-clamp-3 wrap-break-word">
-            <Link href={linkDetail}>
-              The Ultimate guide: Navigating IT career survival and growth in
-              the Age of AI
-            </Link>
+            <Link href={linkDetail}>{title || ""}</Link>
           </HeadingCustom>
 
           <p className="mt-[20px] line-clamp-4 wrap-break-word">
-            Đọc bản tiếng Việt ở đây. The technological landscape is undergoing
-            a fundamental revolution driven by Artificial Intelligence (AI),
-            moving far beyond hype to create tangible shifts in the job market
-            and career lore
+            {shortDescription || ""}
           </p>
         </div>
         <Link href={linkDetail} className="mt-20px text-right">
